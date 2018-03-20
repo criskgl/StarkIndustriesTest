@@ -19,5 +19,4 @@ public interface AgcCalculatorInterface {
 	// FinalInstant represents AGC -RF-02-E3
 	// AGCException represents AGC -RF-02-S2
 
-	
 }
