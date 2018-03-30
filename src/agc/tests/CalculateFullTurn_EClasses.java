@@ -32,14 +32,13 @@ public class CalculateFullTurn_EClasses {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	@Test
-	public void test() {
-		fail("Not yet implemented");
-	}
 	
 	@Test
-	//Fichero inexistente
+	/* Caso de Prueba: CP-RFG-01
+	* Clase de Equivalencia o Valor Límite Asociado: CEI2 
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Error de fichero no encontrado  
+	*/
 	public void testCPRFG_01() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
@@ -52,13 +51,17 @@ public class CalculateFullTurn_EClasses {
 	}
 	
 	@Test
-	//Archivo correcto para ser capetado y realizar todos los cálculos de accels y gyros
+	/* Caso de Prueba: CP-RFG-02
+	* Clase de Equivalencia o Valor Límite Asociado: CEV1 CEV3 CEV5 CEV7 CEV9 CEV12 CEV14 CEV16 CEV19 CEV21 CEV23 CEV25 CEV27 CEV30 
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Ningún error, Ficheros de salida
+	*/
 	public void testCPRFG_02() {
 		AGCCalculator agcc = new AGCCalculator();
 		
 		try {
 			File file = new File("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-02.json");
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-02.json", 0, 40);
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-02-FINAL.json", 0, 40);
 			boolean ficheroOk = file.isFile();
 			
 			assertEquals(ficheroOk, true);//comprueba que el fichero existe
@@ -66,31 +69,14 @@ public class CalculateFullTurn_EClasses {
 			ex.printStackTrace();
 		}
 	}
-	
-	@Test
-	//Comprueba que el cálculo de los giros totales son correctos
-	public void testCPRF2_08() {
-		AGCCalculator agcc = new AGCCalculator();
-		
-		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-08.json", 0, 40);
-			FullTurnByAxes resultGyro = new FullTurnByAxes();
 
-			//Comprobacion de Gyros
-			assertEquals(5, resultGyro.getFullTurn_X(), 1.0d);
-			assertEquals(66, resultGyro.getFullTurn_X(), 1.0d);
-			assertEquals(543, resultGyro.getFullTurn_X(), 1.0d);
-		} catch (AGCException ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	//TODO CP-RF-USER-INPUT-01
-	//TODO CP-RF-USER-INPUT-02
-	
 	@Test
-	//fichero de entrada con sintaxis JSON incorrecta
-	public void testCPRFG_04() {
+	/* Caso de Prueba: CP-RFG-03
+	* Clase de Equivalencia o Valor Límite Asociado: CEI4
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Mensaje de error de sintaxis.  
+	*/
+	public void testCPRFG_03() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
 		try {
@@ -102,25 +88,33 @@ public class CalculateFullTurn_EClasses {
 	}
 
 	@Test
-	//Time no cumple el formato valido (<YYYY-MM-DD HH:mm:ss.SSS. . . >)
+	/* Caso de Prueba: CP-RFG-04
+	* Clase de Equivalencia o Valor Límite Asociado: CEI16
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Error de formato/semántico en fecha.  
+	*/
+	public void testCPRFG_04() {
+		AGCCalculator agcc = new AGCCalculator();
+		String message = "";
+		try {
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-04-FINAL.json", 0, 20);
+		} catch (AGCException ex) {
+			message = ex.getMessage();
+		}
+		assertEquals("Error: date format does not match <YYYY-MM-DD HH:mm:ss.SSS...>", message);
+	}
+	
+	@Test
+	/* Caso de Prueba: CP-RFG-05
+	* Clase de Equivalencia o Valor Límite Asociado: CEI18
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Error de formato/semántico en fecha.
+	*/
 	public void testCPRFG_05() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
 		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-05.json", 0, 20);
-		} catch (AGCException ex) {
-			message = ex.getMessage();
-		}
-		assertEquals("Error: date format does not match <<YYYY-MM-DD HH:mm:ss.SSS...>", message);
-	}
-	
-	@Test
-	//Time tiene algun valor negativo
-	public void testCPRFG_06() {
-		AGCCalculator agcc = new AGCCalculator();
-		String message = "";
-		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-06.json", 0, 20);
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-05-FINAL.json", 0, 20);
 		} catch (AGCException ex) {
 			message = ex.getMessage();
 		}
@@ -128,12 +122,16 @@ public class CalculateFullTurn_EClasses {
 	}
 	
 	@Test
-	//Time no aparece en alguna observación del fichero de entrada
-	public void testCPRFG_07() {
+	/* Caso de Prueba: CP-RFG-06
+	* Clase de Equivalencia o Valor Límite Asociado: CEI10
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Mensaje de error de formato en el fichero de entrada.  
+	*/
+	public void testCPRFG_06() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
 		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-07.json", 0, 20);
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-06-FINAL.json", 0, 20);
 		} catch (AGCException ex) {
 			message = ex.getMessage();
 		}
@@ -141,26 +139,102 @@ public class CalculateFullTurn_EClasses {
 	}
 	
 	@Test
-	//Time aparece mas de una vez para una observacion
-	public void testCPRFG_08() {
+	/* Caso de Prueba: CP-RFG-07
+	* Clase de Equivalencia o Valor Límite Asociado: CEI11
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Mensaje de error de formato en el fichero de entrada.
+	*/
+	public void testCPRFG_07() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
 		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-08.json", 0, 20);
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-07-FINAL.json", 0, 20);
 		} catch (AGCException ex) {
 			message = ex.getMessage();
 		}
 		assertEquals("Error: Time appears more than once in a singular observation", message);
 	}
 	
-
 	@Test
-	//El separador de algun giro no es un punto
-	public void testCPRF2_01() {
+	/* Caso de Prueba: CP-RFG-08
+	* Clase de Equivalencia o Valor Límite Asociado: AVL6
+	* Técnica de prueba: Valor Límite 
+	* Resultado Esperado: Ejecución correcta
+	*/
+	public void testCPRFG_08() {
+		AGCCalculator agcc = new AGCCalculator();
+		fail("not yet implemented");
+		try {
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-08-FINAL.json", 0, 20);
+		} catch (AGCException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	@Test
+	/* Caso de Prueba: CP-RFG-09
+	* Clase de Equivalencia o Valor Límite Asociado: AVL7
+	* Técnica de prueba: Valor Límite 
+	* Resultado Esperado: Error en el intervalo de tiempo entre las observaciones
+	*/
+	public void testCPRFG_09() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
 		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-01.json", 0, 20);
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-09-FINAL.json", 0, 10);
+		} catch (AGCException ex) {
+			message = ex.getMessage();
+		}
+		assertEquals("Error: wrong time interval, must be 20ms for each observation", message);
+	}
+	
+	/* Caso de Prueba: CP-RFG-10
+	* Clase de Equivalencia o Valor Límite Asociado: AVL4
+	* Técnica de prueba: Valor Límite 
+	* Resultado Esperado: Ejecución correcta
+	*/
+	public void testCPRFG_10() {
+		AGCCalculator agcc = new AGCCalculator();
+		String message = "";
+		try {
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-10-FINAL.json", 0, 10);
+		} catch (AGCException ex) {
+			message = ex.getMessage();
+		}
+		assertEquals("Error: wrong time interval, must be 20ms for each observation", message);
+	}
+	
+	/* Caso de Prueba: CP-RFG-11
+	* Clase de Equivalencia o Valor Límite Asociado: AVL5
+	* Técnica de prueba: Valor Límite 
+	* Resultado Esperado: Error en el instante inicial y final.
+	*/
+	public void testCPRFG_11() {
+		AGCCalculator agcc = new AGCCalculator();
+		String message = "";
+		try {
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RFG-11-FINAL.json", 0, 10);
+		} catch (AGCException ex) {
+			message = ex.getMessage();
+		}
+		assertEquals("Error: wrong time interval, must be 20ms for each observation", message);
+	}
+	
+	
+	public void testCPRF2_01() {
+		fail("not yet implemented");
+	}
+	@Test
+	/* Caso de Prueba: CP-RF2-02
+	* Clase de Equivalencia o Valor Límite Asociado: CEI13
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Error semántico en Gyro 
+	*/
+	public void testCPRF2_02() {
+		AGCCalculator agcc = new AGCCalculator();
+		String message = "";
+		try {
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-02-FINAL.json", 0, 20);
 		} catch (AGCException ex) {
 			message = ex.getMessage();
 		}
@@ -168,12 +242,16 @@ public class CalculateFullTurn_EClasses {
 	}
 	
 	@Test
-	//algun giro no aparece para una observacion
-	public void testCPRF2_02() {
+	/* Caso de Prueba: CP-RF2-03
+	* Clase de Equivalencia o Valor Límite Asociado:CEI18
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Error sintáctico en el fichero de entrada.
+	*/
+	public void testCPRF2_03() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
 		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-02.json", 0, 20);
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-03-FINAL.json", 0, 20);
 		} catch (AGCException ex) {
 			message = ex.getMessage();
 		}
@@ -182,12 +260,16 @@ public class CalculateFullTurn_EClasses {
 	
 	
 	@Test
-	//algun giro esta repetido
-	public void testCPRF2_03() {
+	/* Caso de Prueba: CP-RF2-04
+	* Clase de Equivalencia o Valor Límite Asociado:CEI17
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Error sintáctico en el fichero de entrada.
+	*/
+	public void testCPRF2_04() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
 		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-03.json", 0, 20);
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-04-FINAL.json", 0, 20);
 		} catch (AGCException ex) {
 			message = ex.getMessage();
 		}
@@ -195,18 +277,23 @@ public class CalculateFullTurn_EClasses {
 	}
 	
 	@Test
-	//algun giro esta repetido
-	public void testCPRF2_04() {
+	/* Caso de Prueba: CP-RF2-05
+	* Clase de Equivalencia o Valor Límite Asociado:CEI22
+	* Técnica de prueba: Clases de Equivalencia  
+	* Resultado Esperado: Error semántico en Gyro.
+	*/
+	public void testCPRF2_05() {
 		AGCCalculator agcc = new AGCCalculator();
 		String message = "";
 		try {
-			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-04.json", 0, 20);
+			agcc.CalculateMinMaxAcceleration("/ESTARK-Component/tests-json/CE-y-VL/CP-RF2-05-FINAL.json", 0, 20);
 		} catch (AGCException ex) {
 			message = ex.getMessage();
 		}
-		assertEquals("Error: GYRO value no in allowed range", message);
+		assertEquals("Error: GYRO value outside range", message);
 	}
 	
-//TODO CP-RF2-05
+
+	
 
 }
